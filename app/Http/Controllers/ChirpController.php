@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Chirp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ChirpController extends Controller
 {
@@ -12,7 +14,10 @@ class ChirpController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Chirps/Index',[
+            'title' => 'Chirps',
+            'subtitle' => 'Index Chirps'
+        ]);
     }
 
     /**
@@ -28,7 +33,22 @@ class ChirpController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $validated = $request->validate([
+        //     'message' => 'required|max:255',
+        // ]);
+        $request->validate([
+            'message' => 'required|min:20|max:200'
+        ],[
+            'message.required' => 'El mensaje es obligatorio',
+            'message.min' => 'El mensaje debe tener al menos 20 caracteres',
+            'message.max' => 'El mensaje no puede tener mas de 200 caracteres'
+        ]);
+        
+        
+    
+        return $request->user()->chirps()->create($request->all());
+
+
     }
 
     /**
