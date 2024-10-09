@@ -46,9 +46,9 @@ class ChirpController extends Controller
         
         
     
-        return $request->user()->chirps()->create($request->all());
+        $request->user()->chirps()->create($request->all());
 
-
+        return back()->with('status',__('Chirp created!'));
     }
 
     /**

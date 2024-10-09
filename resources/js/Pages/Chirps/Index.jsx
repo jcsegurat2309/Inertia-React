@@ -1,8 +1,11 @@
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Index({title, subtitle}) {
     // const [message, setMessage] = useState('');
@@ -10,32 +13,19 @@ export default function Index({title, subtitle}) {
     // const [processing, setProcessing] = useState(false);
     const {data, setData, post, reset, errors, processing} = useForm({
         message : '',
-
     })
 
     function handleSubmit(event){
         event.preventDefault();
-        post(route('chirps.store'),{
-            onSuccess: (res)=> reset(),
+        post(route('chirps.store'), {
+            onSuccess: () => {
+                reset();
+                toast.success('Chirp creado con exito!');
+                preserveState: false
+            },
         });
+        
     }
-
-    // function handleSubmit(event){
-    //     event.preventDefault();
-    //     setProcessing(true);
-    //     axios.post(route('chirps.store'),{message})
-    //         .then((res)=> {
-    //             setMessage('');
-    //             setErrors({});
-    //         }).catch((error) => {
-    //             if(error.response.status === 422){
-    //                 setErrors(error.response.data.errors);
-    //                 return;
-    //             }
-    //         }).finally(() => {
-    //             setProcessing(false);
-    //         });
-    // }
 
     return (
         <AuthenticatedLayout
@@ -46,7 +36,7 @@ export default function Index({title, subtitle}) {
             }
         >
             <Head title={title} />
-
+            <ToastContainer theme='dark' transition: Zoom/>
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
